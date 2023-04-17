@@ -11,30 +11,22 @@ var path = require('path');
 
 var dataDir = "./data/";
 
-// TODO 1.0 Za ustvarjen objekt, ki predstavlja strežnik, za posamezno tipologijo zahteve v url, kliči zaželjene funkcije.
 var streznik = http.createServer(function(zahteva, odgovor) {
     if (zahteva.url == '/') {
-        // TODO 1.1 Pokliči funkcijo posredujOsnovnoStran
-        // Koda gre sem...
+        posredujOsnovnoStran(odgovor);
     } else if (zahteva.url == '/datoteke') { 
-        // TODO 1.2 Pokliči funkcijo posredujSeznamDatotek
-        // Koda gre sem...
+        posredujSeznamDatotek(odgovor);
     } else if (zahteva.url == "/nalozi") {
-        // TODO 1.3 Pokliči funkcijo za naložitev datoteke naloziDatoteko
-        /* Koda gre sem...*/(zahteva, odgovor);
+        naloziDatoteko(zahteva, odgovor);
     } else if (zahteva.url.startsWith('/prenesi')) { 
-        // TODO 1.4 Pokliči funkcijo posredujStaticnoVsebino s podanimi vhodnimi parametri
-        /* Koda gre sem...*/(odgovor, dataDir + zahteva.url.replace("/prenesi", ""), "application/octet-stream");
+        posredujStaticnoVsebino(odgovor, dataDir + zahteva.url.replace("/prenesi", ""), "application/octet-stream");
     } else if (zahteva.url.startsWith('/brisi')) { 
-        // TODO 1.5 Pokliči funkcijo izbrisiDatoteko s podanimi vhodnimi parametri
-        /* Koda gre sem...*/(odgovor, dataDir + zahteva.url.replace("/brisi", ""));
+        izbrisiDatoteko(odgovor, dataDir + zahteva.url.replace("/brisi", ""));
     } else {
         posredujStaticnoVsebino(odgovor, './public' + zahteva.url, "");
     }
 });
 
-
-// TODO 2.0 Dopolni spodnji klic funkcije z manjkajočim parametrom oz. imenom osnovne strani.
 /**
  *  Posreduje statično vsebino osnovne strani.
  *  
@@ -43,7 +35,7 @@ var streznik = http.createServer(function(zahteva, odgovor) {
  *  @param {mimeType} mimeType prazen niz "" ki predstavlja format MIME od zahtevane vsebine
  */
 function posredujOsnovnoStran(odgovor) {
-    posredujStaticnoVsebino(odgovor, '/* FIXME Dodaj absolutno pot do osnovne strani... */', "");
+    posredujStaticnoVsebino(odgovor, '/public/vegabox.html', "");
 }
 
 
@@ -55,9 +47,9 @@ function posredujOsnovnoStran(odgovor) {
  */
 function posredujSeznamDatotek(odgovor) {
     odgovor.writeHead(200, {'Content-Type': 'application/json'});
-    /* FIXME Na istanci objekta fs kliči funkcijo readdir za branje datoteke... */(dataDir, function(napaka, datoteke) {
+    fs.readdir(dataDir, function(napaka, datoteke) {
         if (napaka) {
-            // FIXME Posreduj napako...
+            alert("Prislo je do napake pri posredovanu datotek");
         } else {
             var seznamDatotek = [];
             for (var i=0; i<datoteke.length; i++) {
@@ -66,14 +58,12 @@ function posredujSeznamDatotek(odgovor) {
                 seznamDatotek.push({datoteka: datoteka, velikost: velikost});
             }
             
-            odgovor.write(/* FIXME Na objektu JSON kliči funkcijo stringify z vhodnim parametrom seznamDatotek... */);
+            odgovor.write(JSON.stringify(seznamDatotek));
             odgovor.end();      
         }
     });
 }
 
-
-// TODO 4.0 Naloži novo izbrano datoteko v prikazan seznam datotek.
 /**
  *  Naloži novo datoteko iz lokalnega datotečnega sistema (file-system)
  *  v spletni servis VegaBox.
@@ -96,7 +86,7 @@ function naloziDatoteko(zahteva, odgovor) {
         var datoteka = this.openedFiles[0].name;
         fs.copy(zacasnaPot, dataDir + datoteka, function(napaka) {  
             if (napaka) {
-                // TODO 4.1 Posreduj napako...
+               alert("Prišlo je do napake pri naložbi datoteke");
             } else {
                 posredujOsnovnoStran(odgovor);        
             }
@@ -118,7 +108,7 @@ function posredujStaticnoVsebino(odgovor, absolutnaPotDoDatoteke, mimeType) {
         if (datotekaObstaja) {
             fs.readFile(absolutnaPotDoDatoteke, function(napaka, datotekaVsebina) {
                 if (napaka) {
-                    // TODO 5.1 Posreduj napako...
+                    alert("Prislo je to napake pri po");
                 } else {
                     // TODO 5.2 Kliži funkcijo posredujDatoteko s podanimi vhodnimi parametri
                     /* Koda gre sem */(odgovor, absolutnaPotDoDatoteke, datotekaVsebina, mimeType);
