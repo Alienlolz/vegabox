@@ -39,7 +39,7 @@ function posredujOsnovnoStran(odgovor) {
 }
 
 
-// TODO 3.0 Beri iz seznama datotek dataDir ter za vsako vrni ime in velikost.
+
 /**
  *  Posreduje seznam datotek, ki se nahajajo v mapi data.
  *  
@@ -94,8 +94,6 @@ function naloziDatoteko(zahteva, odgovor) {
     });
 }
 
-
-// TODO 5.0 Dopolni vsebino spodnje funkcije za posredovanje zahtevane datoteke od strežnika.
 /**
  *  Posreduje zahtevano datoteko uporabniku, če ta obstaja na strežniku.
  * 
@@ -110,12 +108,11 @@ function posredujStaticnoVsebino(odgovor, absolutnaPotDoDatoteke, mimeType) {
                 if (napaka) {
                     alert("Prislo je to napake pri po");
                 } else {
-                    // TODO 5.2 Kliži funkcijo posredujDatoteko s podanimi vhodnimi parametri
-                    /* Koda gre sem */(odgovor, absolutnaPotDoDatoteke, datotekaVsebina, mimeType);
+                    posredujDatoteko(odgovor, absolutnaPotDoDatoteke, datotekaVsebina, mimeType);
                 }
             })
         } else {
-            // TODO 5.3 Posreduj napako...
+            alert("Prišlo je do napake pri posredovanju statične vsebine");
         }
     });
 }
@@ -139,7 +136,6 @@ function posredujDatoteko(odgovor, datotekaPot, datotekaVsebina, mimeType) {
     odgovor.end(datotekaVsebina);
 }
 
-// TODO 6.0 Dopolni funkcijo za izbris datoteke iz seznama.
 /**
  *  Izbriše izbrano datoteko iz prisotnega seznama naloženih datotek.
  *  
@@ -150,12 +146,11 @@ function posredujDatoteko(odgovor, datotekaPot, datotekaVsebina, mimeType) {
 function izbrisiDatoteko(odgovor, absolutnaPotDoDatoteke) {
     fs.exists(absolutnaPotDoDatoteke, function(datotekaObstaja) {
         if(datotekaObstaja) {
-            // TODO 6.1 kliči funkcijo remove na objektu fs s podanimi vhodnimi parametri.
             fs.remove(absolutnaPotDoDatoteke, function(napaka) {
                 if(!napaka) {
                     alert("Datoteka je bila izbrisana iz seznama.");
                 } else {
-                    // TODO 6.2 Posreduj napako...
+                    alert("Datoteka ni bila izbrisana iz seznama.");
                 }
             });
         }
